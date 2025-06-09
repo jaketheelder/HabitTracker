@@ -10,8 +10,8 @@ import SwiftUI
 struct AddActivity: View {
     @Environment(\.dismiss) var dismiss
     @State private var activityName = ""
-    var activityList: UserActivities
     
+    var activityList: UserActivities
     
     var body: some View {
         Form{
@@ -21,17 +21,20 @@ struct AddActivity: View {
             Section {
                 VStack(alignment: .center) {
                     Button("Create") {
-                        //TODO: Check if the activityName is empty
-                        let newActivity = Activity(name: activityName)
-                        activityList.activities.append(newActivity)
-                        
-                        if let encoded = try? JSONEncoder().encode(activityList.activities) {
-                            UserDefaults.standard.set(encoded, forKey: "HabitTrackerActivities")
+                        if (activityName.isEmpty) {
+                            // Do Nothing
                         } else {
-                            fatalError("Unable to encode the activity list")
+                            let newActivity = Activity(name: activityName)
+                            activityList.activities.append(newActivity)
+                            
+                            if let encoded = try? JSONEncoder().encode(activityList.activities) {
+                                UserDefaults.standard.set(encoded, forKey: "HabitTrackerActivities")
+                            } else {
+                                fatalError("Unable to encode the activity list")
+                            }
+                            
+                            dismiss()
                         }
-                        
-                        dismiss()
                     }
                         .padding(.bottom)
                         .frame(maxWidth: .infinity)
@@ -45,6 +48,7 @@ struct AddActivity: View {
 }
 
 #Preview {
+    @Previewable @State var entryError = false
     var emptyActivityList = UserActivities()
     
     AddActivity(activityList: emptyActivityList)

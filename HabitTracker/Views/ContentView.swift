@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var activities = UserActivities()
     @State private var presentAdd = false
+    @State private var entryError = false
     
     var body: some View {
         NavigationStack {
@@ -35,6 +36,7 @@ struct ContentView: View {
             .sheet(isPresented: $presentAdd) {
                 AddActivity(activityList: activities)
             }
+            
             .navigationTitle("Habits")
         }
     }
