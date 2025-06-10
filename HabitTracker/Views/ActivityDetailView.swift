@@ -21,21 +21,32 @@ struct ActivityDetail: View {
     }
     
     var body: some View {
-        Button("Complete Activity") {
-            activityList.activities[activityIndex].timesCompleted += 1
-            if let encoded = try? JSONEncoder().encode(activityList.activities) {
-                UserDefaults.standard.set(encoded, forKey: "HabitTrackerActivities")
-            } else {
-                fatalError("Unable to encode the activity list")
+        Form {
+            Section("Description") {
+                Text(activityList.activities[activityIndex].description)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             }
-            dismiss()
+                .listRowBackground(Color(.tertiarySystemFill))
+            Section("Record activity") {
+                Button("Complete Activity") {
+                    activityList.activities[activityIndex].timesCompleted += 1
+                    if let encoded = try? JSONEncoder().encode(activityList.activities) {
+                        UserDefaults.standard.set(encoded, forKey: "HabitTrackerActivities")
+                    } else {
+                        fatalError("Unable to encode the activity list")
+                    }
+                    dismiss()
+                }
+                .frame(maxWidth: .infinity)
+            }
         }
         .navigationTitle(activityList.activities[activityIndex].name)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    let displayedActivity = Activity(name: "Testing")
+    let displayedActivity = Activity(name: "Testing", description: "A test of an activity")
     let testingUserActivities = UserActivities()
     testingUserActivities.activities.append(displayedActivity)
     

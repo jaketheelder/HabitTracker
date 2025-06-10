@@ -10,13 +10,16 @@ import SwiftUI
 struct AddActivity: View {
     @Environment(\.dismiss) var dismiss
     @State private var activityName = ""
+    @State private var description = "Activity description..."
     
     var activityList: UserActivities
     
     var body: some View {
         Form{
             Section("Activity Information") {
-                TextField("Activity Name", text: $activityName)
+                TextField("Activity name", text: $activityName)
+                TextEditor(text: $description)
+                    .frame(minHeight: 100, maxHeight: .infinity)
             }
             Section {
                 VStack(alignment: .center) {
@@ -24,7 +27,7 @@ struct AddActivity: View {
                         if (activityName.isEmpty) {
                             // Do Nothing
                         } else {
-                            let newActivity = Activity(name: activityName)
+                            let newActivity = Activity(name: activityName, description: self.description)
                             activityList.activities.append(newActivity)
                             
                             if let encoded = try? JSONEncoder().encode(activityList.activities) {
@@ -51,5 +54,5 @@ struct AddActivity: View {
     @Previewable @State var entryError = false
     var emptyActivityList = UserActivities()
     
-    AddActivity(activityList: emptyActivityList)
+    return AddActivity(activityList: emptyActivityList)
 }
